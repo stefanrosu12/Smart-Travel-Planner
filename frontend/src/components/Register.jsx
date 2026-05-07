@@ -36,7 +36,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/users/register', {
+      const response = await fetch('http://localhost:3000/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const Register = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMessage(data.message || 'A apărut o eroare la înregistrare.');
+        setErrorMessage(data.error || data.message || 'A apărut o eroare la înregistrare.');
       } else {
         setSuccessMessage('Contul a fost creat cu succes. Poți să te loghezi acum.');
         setUsername('');
