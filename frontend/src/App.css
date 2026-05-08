@@ -1,184 +1,172 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600&display=swap');
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+:root {
+  --deep-coffee: #2D1B18;
+  --classic-brown: #5D4037;
+  --toffee: #A67C52;
+  --cream-bg: #FAF7F2;
+  --ivory: #FFFFFF;
+  --border-soft: #E5E0DA;
 }
 
-.hero {
+body {
+  margin: 0;
+  background-color: var(--cream-bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--deep-coffee);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* CONTAINERUL CENTRAL */
+.app-card {
+  background: var(--ivory);
+  padding: 4rem 3rem;
+  border-radius: 4px; /* Stil minimalist, nu foarte rotunjit */
+  box-shadow: 0 20px 40px rgba(45, 27, 24, 0.05);
+  width: 90%;
+  max-width: 500px;
   position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+  border: 1px solid var(--border-soft);
 }
 
-#center {
+/* BRANDING */
+.brand-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  letter-spacing: -0.5px;
+  color: var(--deep-coffee);
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--toffee);
+  font-weight: 600;
+}
+
+/* FORMULAR */
+.form-section {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  gap: 2rem;
 }
 
-#next-steps {
+.input-group {
   display: flex;
-  border-top: 1px solid var(--border);
+  flex-direction: column;
+  gap: 0.5rem;
   text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.input-group label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--classic-brown);
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+input, textarea {
+  border: none;
+  border-bottom: 1px solid var(--border-soft);
+  padding: 10px 0;
+  font-family: inherit;
+  font-size: 1.1rem;
+  background: transparent;
+  transition: border-color 0.4s ease;
+  color: var(--deep-coffee);
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+input:focus, textarea:focus {
+  outline: none;
+  border-bottom-color: var(--toffee);
 }
 
-.ticks {
+/* BUTOANE */
+.btn-prime {
+  background: var(--deep-coffee);
+  color: var(--cream-bg);
+  border: none;
+  padding: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-prime:hover {
+  background: var(--classic-brown);
+  letter-spacing: 3px;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  color: var(--classic-brown);
+  margin-top: 1rem;
+  padding: 15px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* TIMELINE ITINERARIU (WOW) */
+.timeline {
+  margin: 2.5rem 0;
   position: relative;
-  width: 100%;
+  padding-left: 30px;
+  text-align: left;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  bottom: 5px;
+  width: 1px;
+  background: var(--border-soft);
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+.timeline-item {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -34px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  background: var(--toffee);
+  border-radius: 50%;
+  border: 3px solid var(--ivory);
+}
+
+.location-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* LOADING STATES */
+.loader {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  padding: 3rem 0;
+  color: var(--classic-brown);
 }

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
-import Dashboard from './components/Dashboard.jsx'; 
+import Dashboard from './components/Dashboard.jsx';
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
             {/* 2. Rutele tale funcționale */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             {/* 3. Pagina principală după Login (Ecranul Split) */}
             <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
