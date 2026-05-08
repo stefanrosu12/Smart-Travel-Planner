@@ -27,7 +27,6 @@ const Login = () => {
     setError('');
 
     try {
-      // ATENȚIE: Verifică dacă portul colegului tău este 3000 sau 5000!
       const response = await fetch('http://localhost:3000/api/users/login', {
         method: 'POST',
         headers: { 
@@ -39,18 +38,26 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // ✅ SUCCES: Salvăm token-ul primit de la el
+        // ✅ SUCCES: Salvăm token-ul primit
         localStorage.setItem('token', data.token); 
+        
+        // --- MODIFICAREA NOUĂ: Salvăm și email-ul ca să-l vadă Navbar-ul ---
+        // Folosim email-ul pe care user-ul l-a scris în input
+        localStorage.setItem('userEmail', email);
+        
         console.log('Logare reușită!');
         
         // Te trimitem la Dashboard-ul tău
         navigate('/dashboard'); 
+        
+        // Forțăm o reîncărcare scurtă a paginii ca Navbar-ul să își dea seama imediat de schimbare
+        window.location.reload(); 
       } else {
-        // ❌ EROARE: Mesajul vine de la backend-ul lui
+        // ❌ EROARE: Mesajul vine de la backend
         setError(data.message || 'Email sau parolă incorectă!');
       }
     } catch (err) {
-      // ⚠️ EROARE: Serverul lui nu este pornit
+      // ⚠️ EROARE: Serverul nu este pornit
       setError('Eroare: Nu mă pot conecta la server. Este pornit backend-ul?');
     }
   };
@@ -88,7 +95,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full border-b-2 border-slate-100 py-3 text-sm focus:border-slate-900 outline-none transition-colors text-slate-900"
+              className="w-full border-b-2 border-slate-100 py-3 text-sm focus:border-slate-900 outline-none transition-colors text-slate-900 bg-transparent"
               placeholder="you@example.com"
             />
           </div>
@@ -102,7 +109,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border-b-2 border-slate-100 py-3 text-sm focus:border-slate-900 outline-none transition-colors text-slate-900"
+              className="w-full border-b-2 border-slate-100 py-3 text-sm focus:border-slate-900 outline-none transition-colors text-slate-900 bg-transparent"
               placeholder="••••••••"
             />
           </div>
