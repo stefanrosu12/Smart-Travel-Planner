@@ -15,6 +15,11 @@ const Route = sequelize.define('Route', {
         type: DataTypes.TEXT,
         allowNull: false
     },
+    oras: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
+    },
     places: {
         type: DataTypes.JSON,
         allowNull: false

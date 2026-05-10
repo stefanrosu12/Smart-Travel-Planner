@@ -88,7 +88,7 @@ const Dashboard = () => {
       });
       const data = await raspuns.json();
       if (raspuns.ok) {
-        setTraseuSalvat(data.route);
+        setTraseuSalvat({ ...data.route, oras });
         setEcran('detalii');
         setCurrentStep(0);
         setTraseuInDesfasurare(false);

@@ -12,7 +12,7 @@ class RouteController {
             
             const title = `Excursie generată AI în ${oras}`;
             
-            const newRoute = await routeService.addRoute(title, prompt_used, generatedPlaces);
+            const newRoute = await routeService.addRoute(title, prompt_used, generatedPlaces, oras);
             
             res.status(201).json({ 
                 message: "Rută generată cu AI și salvată cu succes!", 
