@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react';
-import Harta from './Map.jsx'; // sau './Harta.jsx'
-import Review from './Review.jsx'; // Am importat fișierul colegei tale!
+import Harta from './Map.jsx'; 
+import Review from './Review.jsx'; 
+import TurFinalizatSplash from './TurFinalizatSplash.jsx'; // Am importat noua ta componentă!
 
 const Dashboard = () => {
-  const [ecran, setEcran] = useState('formular');
+  // Am adăugat starea 'splash'
+  const [ecran, setEcran] = useState('formular'); 
   const [oras, setOras] = useState('');
   const [dorinta, setDorinta] = useState('');
   const [traseuSalvat, setTraseuSalvat] = useState(null);
@@ -106,9 +108,9 @@ const Dashboard = () => {
     }
   };
 
+  // MODIFICARE AICI: Schimbăm ecranul pe 'splash' prima dată!
   const handleFinalizeazaTurul = () => {
-    // Declansam animația de lift spre pagina colegei
-    setEcran('review');
+    setEcran('splash');
     setTraseuInDesfasurare(false);
     setCurrentStep(0);
   };
@@ -120,14 +122,14 @@ const Dashboard = () => {
   const elegantScrollbar = "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-500 overflow-y-auto";
 
   return (
-    // CONTAINERUL PRINCIPAL PENTRU "LIFT" (Ascunde ce iese din ecran)
     <div className="relative h-[calc(100vh-70px)] w-full overflow-hidden bg-slate-950 text-slate-100">
       
       {/* -------------------------------------------------------------
-          ECRANUL 1: DASHBOARD-UL CU HARTA (Zboară în sus la final)
+          ECRANUL 1: DASHBOARD-UL CU HARTA 
+          (Acum se ridică și dacă suntem pe 'splash' și dacă suntem pe 'review')
           ------------------------------------------------------------- */}
       <div 
-        className={`absolute inset-0 w-full h-full flex flex-col lg:flex-row transition-transform duration-1000 ease-in-out ${ecran === 'review' ? '-translate-y-full' : 'translate-y-0'}`}
+        className={`absolute inset-0 w-full h-full flex flex-col lg:flex-row transition-transform duration-1000 ease-in-out ${ecran === 'review' || ecran === 'splash' ? '-translate-y-full' : 'translate-y-0'}`}
       >
         {/* SIDEBAR STÂNGA */}
         <div className="w-full lg:w-[400px] bg-slate-900 shadow-2xl z-10 flex flex-col border-r border-slate-700 h-full">
@@ -224,7 +226,6 @@ const Dashboard = () => {
                     >
                       Confirmă & Începe Vizita
                     </button>
-                    {/* BUTONUL NOU: Permite respingerea traseului */}
                     <button
                       className="w-full bg-slate-800 border border-slate-600 hover:bg-slate-700 text-slate-300 font-bold text-xs tracking-widest uppercase py-3.5 px-4 rounded-xl transition-all"
                       onClick={() => { setTraseuSalvat(null); setEcran('formular'); }}
@@ -283,7 +284,6 @@ const Dashboard = () => {
             cityCoords={cityCoords}
           />
           
-          {/* FIX: Am adăugat logica de a dispărea (opacity-0) în timpul turului și trunchiere (truncate) pentru nume lungi */}
           <div className={`absolute top-8 right-8 z-[1000] pointer-events-none transition-all duration-700 ease-in-out ${traseuInDesfasurare ? 'opacity-0 -translate-y-5' : 'opacity-100 translate-y-0'}`}>
              <span className="bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full text-xs font-black text-blue-400 border border-blue-500/30 uppercase tracking-widest shadow-2xl flex max-w-[200px] md:max-w-[300px]">
                 <span className="truncate">
@@ -295,17 +295,29 @@ const Dashboard = () => {
       </div>
 
       {/* -------------------------------------------------------------
-          ECRANUL 2: PAGINA DE RECENZIE (Intră de jos)
+          ECRANUL 2: PAGINA DE RECENZIE
+          (Urcă în fundal pe ecran chiar și când splash-ul e activ!)
           ------------------------------------------------------------- */}
       <div 
-        // AICI AM SCHIMBAT overflow-hidden cu overflow-y-auto și overflow-x-hidden
-        className={`absolute inset-0 w-full h-full bg-slate-950 overflow-y-auto overflow-x-hidden transition-transform duration-1000 ease-in-out ${ecran === 'review' ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`absolute inset-0 w-full h-full bg-slate-950 overflow-hidden transition-transform duration-1000 ease-in-out ${ecran === 'review' || ecran === 'splash' ? 'translate-y-0' : 'translate-y-full'}`}
       >
         <Review 
           traseu={traseuSalvat} 
           onInapoi={() => { setEcran('formular'); setTraseuSalvat(null); setOras(''); setDorinta(''); }} 
         />
       </div>
+
+      {/* -------------------------------------------------------------
+          ECRANUL 3: SPLASH-UL CU BIFA
+          (Apare PESTE toate celelalte imediat cum ai dat click)
+          ------------------------------------------------------------- */}
+      {ecran === 'splash' && (
+        <TurFinalizatSplash 
+          actualCity={traseuSalvat?.oras || oras} 
+          onComplete={() => setEcran('review')} // Când trec cele 4.5s, trecem pe review și bifa dispare!
+        />
+      )}
+
     </div>
   );
 };
