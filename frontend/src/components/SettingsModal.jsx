@@ -56,6 +56,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
         onClose();
         navigate('/'); // Redirecționăm la pagina principală
       }
+      else { alert("Eroare de la server: " + data.error); }
     } catch (error) {
       alert("Eroare la ștergerea contului.");
     }

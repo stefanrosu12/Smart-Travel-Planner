@@ -1,3 +1,4 @@
+const User = require('../models/User');
 const userRepository = require('../repositories/UserRepository');
 
 class UserService {
@@ -47,6 +48,25 @@ class UserService {
             username: user.username,
             email: user.email
         };
+    }
+
+    async updateName(userId, newUsername) {
+        const user = await User.findByPk(userId); // Aici caută în baza de date după ID
+        if (!user) {
+            throw new Error("Utilizatorul nu a fost găsit.");
+        }
+        user.username = newUsername; // Actualizăm coloana 'username'
+        await user.save();
+        return user;
+    }
+
+    async deleteAccount(userId) {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            throw new Error("Utilizatorul nu a fost găsit.");
+        }
+        await user.destroy(); // Șterge rândul
+        return true;
     }
 }
 

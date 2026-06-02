@@ -53,7 +53,7 @@ const Login = () => {
         // ==========================================
         // 🛡️ PLASA DE SIGURANȚĂ PENTRU ADMIN
         // ==========================================
-        let rolFinal = data.role; // Vedem dacă băieții au trimis rolul din DB
+        let rolFinal = data.userRole || data.role; 
         
         if (!rolFinal) {
           // Dacă nu au trimis, aplicăm regula secretă pe frontend:
