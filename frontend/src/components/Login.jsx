@@ -44,8 +44,31 @@ const Login = () => {
         // --- MODIFICAREA NOUĂ: Salvăm și email-ul ca să-l vadă Navbar-ul ---
         // Folosim email-ul pe care user-ul l-a scris în input
         localStorage.setItem('userEmail', email);
+
+        // --- SALVĂM ID-ul PENTRU SETĂRI CONT ---
+        // Ca să meargă ștergerea și modificarea în SettingsModal
+        if (data.userId) localStorage.setItem('userId', data.userId);
+        else if (data.id) localStorage.setItem('userId', data.id); // în caz că băieții l-au numit doar 'id'
+
+        // ==========================================
+        // 🛡️ PLASA DE SIGURANȚĂ PENTRU ADMIN
+        // ==========================================
+        let rolFinal = data.role; // Vedem dacă băieții au trimis rolul din DB
         
-        console.log('Logare reușită!');
+        if (!rolFinal) {
+          // Dacă nu au trimis, aplicăm regula secretă pe frontend:
+          if (email.toLowerCase().includes('admin')) {
+            rolFinal = 'admin';
+          } else {
+            rolFinal = 'user';
+          }
+        }
+        
+        // Salvăm rolul final în browser
+        localStorage.setItem('userRole', rolFinal);
+        // ==========================================
+        
+        console.log('Logare reușită! Te-ai logat cu rolul:', rolFinal);
         
         // Te trimitem la Dashboard-ul tău
         navigate('/dashboard'); 

@@ -6,6 +6,11 @@ const Review = ({ traseu, onInapoi }) => {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Stare nouă pentru a ține minte ce scrie adminul în căsuța de răspuns a fiecărei recenzii
+  const [adminReplyTexts, setAdminReplyTexts] = useState({});
+  // Luăm rolul din localStorage ca să știm cine e șeful
+  const userRole = localStorage.getItem('userRole');
+
   const [allReviews, setAllReviews] = useState(() => {
     const recenziiSalvate = localStorage.getItem('travel_reviews');
     if (recenziiSalvate) {
@@ -32,7 +37,8 @@ const Review = ({ traseu, onInapoi }) => {
               city: rev.city || actualCity,
               rating: rev.rating || 0,
               comment: rev.comment || '',
-              date: rev.date || 'Recent'
+              date: rev.date || 'Recent',
+              adminReply: rev.adminReply || null // Adăugăm și răspunsul din baza de date
             })));
           }
         }
@@ -65,17 +71,16 @@ const Review = ({ traseu, onInapoi }) => {
     if (!comment.trim()) return;
     setLoading(true);
 
-    // Creăm recenzia vizuală pentru frontend
     const newReview = { 
         id: Date.now(), 
         user: 'Tu', 
         city: actualCity, 
         rating: rating, 
         comment: comment.trim(), 
-        date: 'Acum' 
+        date: 'Acum',
+        adminReply: null // Recenzia nouă e fără răspuns inițial
     };
 
-    // Datele cerute de backend
     const reviewData = {
       userId: 1, 
       routeId: traseu?.id || 1, 
@@ -95,26 +100,41 @@ const Review = ({ traseu, onInapoi }) => {
       if (!response.ok) {
         const errorData = await response.json();
         console.warn("Backend-ul a respins salvarea (Motiv: " + errorData.error + "). Trecem pe salvare locală!");
-        // Am scos Alert-ul ca să nu te mai deranjeze pe ecran
       } else {
         console.log("Salvat cu succes și în baza de date!");
       }
-
     } catch (error) { 
         console.error('Eroare conexiune cu backend-ul:', error); 
     }
 
-    // ==========================================
-    // MAGIA DE FRONTEND: Salvăm oricum pe ecran!
-    // ==========================================
     const listaNouaDeRecenzii = [newReview, ...allReviews];
-    setAllReviews(listaNouaDeRecenzii); // O punem pe ecran
-    localStorage.setItem('travel_reviews', JSON.stringify(listaNouaDeRecenzii)); // O salvăm în memorie ca să reziste la refresh!
+    setAllReviews(listaNouaDeRecenzii); 
+    localStorage.setItem('travel_reviews', JSON.stringify(listaNouaDeRecenzii));
 
     setComment(''); 
     setRating(5); 
     setHover(0); 
     setLoading(false);
+  };
+
+  // ==========================================
+  // FUNCȚIA DE RĂSPUNS ADMIN
+  // ==========================================
+  const handleAdminReplySubmit = (reviewId) => {
+    const replyText = adminReplyTexts[reviewId];
+    if (!replyText?.trim()) return;
+
+    // Aici băieții de pe backend vor face un PUT /api/reviews/update/:id
+    // Dar noi facem magia de frontend ca să se vadă instant!
+    const updatedReviews = allReviews.map(r => 
+      r.id === reviewId ? { ...r, adminReply: replyText.trim() } : r
+    );
+
+    setAllReviews(updatedReviews);
+    localStorage.setItem('travel_reviews', JSON.stringify(updatedReviews));
+    
+    // Curățăm căsuța de scris pentru recenzia respectivă
+    setAdminReplyTexts(prev => ({ ...prev, [reviewId]: '' }));
   };
 
   return (
@@ -191,25 +211,60 @@ const Review = ({ traseu, onInapoi }) => {
               </div>
             </div>
 
-            {/* DREAPTA */}
+            {/* DREAPTA - AICI E MAGIA CU ADMINUL */}
             <div className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-[30px] flex flex-col min-h-0 shadow-xl">
                <div className="mb-4 flex justify-between items-end">
                   <h3 className="text-xl font-bold">Alte experiențe</h3>
                   <span className="text-xs text-blue-400">{filteredReviews.length} recenzii</span>
                </div>
+               
                <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
                   {filteredReviews.map(rev => (
-                    <div key={rev.id} className="bg-white/5 border border-white/5 p-4 rounded-2xl">
+                    <div key={rev.id} className="bg-white/5 border border-white/5 p-4 rounded-2xl flex flex-col">
+                      
+                      {/* Antetul recenziei */}
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-bold text-sm">{rev.user}</span>
                         <div className="flex text-amber-400 text-[10px]">
                           {[...Array(5)].map((_, i) => <span key={i} className={i < rev.rating ? 'opacity-100' : 'opacity-20'}>★</span>)}
                         </div>
                       </div>
-                      <p className="text-gray-400 text-xs italic">"{rev.comment}"</p>
+                      
+                      {/* Textul recenziei */}
+                      <p className="text-gray-400 text-xs italic mb-2">"{rev.comment}"</p>
+
+                      {/* --- CONDITIA 1: DACĂ EXISTĂ RĂSPUNS DE LA ADMIN --- */}
+                      {rev.adminReply && (
+                         <div className="mt-2 p-3 bg-slate-900/60 border-l-2 border-blue-500 rounded-r-xl">
+                           <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-1">Răspuns Oficial</span>
+                           <p className="text-xs text-slate-300">{rev.adminReply}</p>
+                         </div>
+                      )}
+
+                      {/* --- CONDITIA 2: DACĂ NU EXISTĂ RĂSPUNS ȘI EȘTI ADMIN --- */}
+                      {!rev.adminReply && userRole === 'admin' && (
+                         <div className="mt-3 flex gap-2 border-t border-white/10 pt-3">
+                           <input
+                             type="text"
+                             value={adminReplyTexts[rev.id] || ''}
+                             onChange={(e) => setAdminReplyTexts(prev => ({...prev, [rev.id]: e.target.value}))}
+                             placeholder="Scrie un răspuns oficial..."
+                             className="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
+                           />
+                           <button
+                             onClick={() => handleAdminReplySubmit(rev.id)}
+                             disabled={!adminReplyTexts[rev.id]?.trim()}
+                             className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all uppercase tracking-wider"
+                           >
+                             Răspunde
+                           </button>
+                         </div>
+                      )}
+
                     </div>
                   ))}
                </div>
+
                <button 
                   onClick={() => { if (onInapoi) onInapoi(); }} 
                   className="mt-6 border border-white/20 bg-black/40 py-3 rounded-xl text-xs font-bold tracking-widest hover:bg-white/10 transition-colors uppercase"

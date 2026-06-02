@@ -1,8 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import SettingsModal from './SettingsModal';
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   
   // Stările pentru utilizator
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,10 +17,12 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('userEmail');
+    const role = localStorage.getItem('userRole'); // <--- AICI CITIM ROLUL
     
     if (token) {
       setIsLoggedIn(true);
       setUserEmail(email || 'Utilizator');
+      setUserRole(role); 
     }
   }, []);
 
@@ -25,8 +30,12 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('userId'); // E bine să ștergem și ID-ul
+    localStorage.removeItem('userRole'); // Ștergem și rolul ca să fie totul curat
+    
     setIsLoggedIn(false);
     setUserEmail('');
+    setUserRole(null);
     setDropdownOpen(false); 
     navigate('/'); // Te trimite la pagina principală după logout
   };
@@ -71,11 +80,34 @@ const Navbar = () => {
                     <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Cont conectat</p>
                     <p className="text-sm text-white truncate font-medium mt-0.5">{userEmail}</p>
                   </div>
+
+                  {/* ---> BUTONUL DE ADMIN PANEL (Apare DOAR dacă ești admin) <--- */}
+                  {userRole === 'admin' && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setDropdownOpen(false)}
+                      className="w-full text-left block px-4 py-3 text-sm font-bold text-blue-400 hover:bg-slate-800 transition-colors duration-200 border-b border-slate-800/50 uppercase tracking-widest"
+                    >
+                      ⚙️ Admin Panel
+                    </Link>
+                  )}
+
+                  {/* ---> AICI AM ADĂUGAT BUTONUL DE SETĂRI <--- */}
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false); // Închidem meniul mic
+                      setIsSettingsOpen(true); // Deschidem modalul mare
+                    }}
+                    className="w-full text-left block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors duration-200 border-b border-slate-800/50"
+                  >
+                    Setări Cont
+                  </button>
+
                   <button
                     onClick={handleLogout}
                     className="w-full text-left block px-4 py-3 text-sm text-red-400 hover:bg-slate-800 transition-colors duration-200"
                   >
-                    Log Out
+                    Log Out 
                   </button>
                 </>
               ) : (
@@ -102,6 +134,13 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {/* ---> AICI AM ADĂUGAT MODALUL <--- */}
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
+
     </header>
   );
 };
