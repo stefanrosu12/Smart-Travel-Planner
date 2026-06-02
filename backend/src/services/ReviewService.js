@@ -2,7 +2,7 @@ const reviewRepository = require('../repositories/ReviewRepository');
 const userRouteRepository = require('../repositories/UserRouteRepository');
 
 class ReviewService {
-    async addReview(userId, routeId, rating, comment) {
+    async addReview(userId, routeId, rating, comment, city, userName) {
 
         if (!userId || !routeId || !rating) {
             throw new Error("User ID, Route ID și nota (rating) sunt obligatorii!");
@@ -26,10 +26,21 @@ class ReviewService {
         const newReview = await reviewRepository.createReview({
             userRouteId: trip.id,
             rating: rating,
-            comment: comment || "" 
+            comment: comment || "",
+            city: city || null,
+            userName: userName || null
         });
 
         return newReview;
+    }
+
+    async getAllReviews() {
+        try {
+            const reviews = await reviewRepository.getAllReviews();
+            return reviews || [];
+        } catch (error) {
+            throw new Error("Eroare la obținerea review-urilor: " + error.message);
+        }
     }
 }
 

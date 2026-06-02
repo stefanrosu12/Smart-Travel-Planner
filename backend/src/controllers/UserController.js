@@ -14,11 +14,14 @@ class UserController {
     async login(req, res) {
         try {
             const { email, password } = req.body;
+            // userService.login face verificarea și returnează datele din baza de date
             const user = await userService.login(email, password);
             
             res.status(200).json({
                 message: "Login reușit!",
-                user: user
+                userId: user.id,
+                userEmail: user.email,
+                userRole: user.role, 
             });
         } catch (error) {
             res.status(401).json({ error: error.message });
@@ -30,6 +33,34 @@ class UserController {
             res.status(200).json({ message: "Logout reușit!" });
         } catch (error) {
             res.status(500).json({ error: "Eroare la logout." });
+        }
+    }
+
+    async updateName(req, res) {
+        try {
+            const { id } = req.params; 
+            const { username } = req.body; // Am adaptat: acum prindem 'username'
+            
+            if (!username || username.trim() === "") {
+                return res.status(400).json({ success: false, error: "Numele nu poate fi gol." });
+            }
+
+            await userService.updateName(id, username);
+            // Am adaptat: trimitem success: true
+            res.status(200).json({ success: true, message: "Nume actualizat!" });
+        } catch (error) {
+            res.status(400).json({ success: false, error: error.message });
+        }
+    }
+
+    async deleteAccount(req, res) {
+        try {
+            const { id } = req.params;
+            await userService.deleteAccount(id);
+            // Am adaptat: trimitem success: true
+            res.status(200).json({ success: true, message: "Cont șters definitiv." });
+        } catch (error) {
+            res.status(400).json({ success: false, error: error.message });
         }
     }
 }
