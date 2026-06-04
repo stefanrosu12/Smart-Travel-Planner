@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 const TurFinalizatSplash = ({ onComplete, actualCity }) => {
 
   useEffect(() => {
-    // Stă pe ecran 4.5 secunde, apoi apelează onComplete
     const timer = setTimeout(() => {
       if (onComplete) onComplete();
     }, 1500);

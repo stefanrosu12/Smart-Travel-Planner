@@ -51,11 +51,11 @@ class UserService {
     }
 
     async updateName(userId, newUsername) {
-        const user = await User.findByPk(userId); // Aici caută în baza de date după ID
+        const user = await User.findByPk(userId); 
         if (!user) {
             throw new Error("Utilizatorul nu a fost găsit.");
         }
-        user.username = newUsername; // Actualizăm coloana 'username'
+        user.username = newUsername; 
         await user.save();
         return user;
     }
@@ -65,7 +65,7 @@ class UserService {
         if (!user) {
             throw new Error("Utilizatorul nu a fost găsit.");
         }
-        await user.destroy(); // Șterge rândul
+        await user.destroy();
         return true;
     }
 }

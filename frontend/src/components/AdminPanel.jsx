@@ -70,7 +70,7 @@ const AdminPanel = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden pt-24 pb-12 px-6 bg-[#0f172a]">
-      {/* IMAGINEA DE FUNDAL (Sora paginii de Recenzii) */}
+      {/* IMAGINEA DE FUNDAL */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center opacity-40"
         style={{ backgroundImage: "url('https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=2056')" }}
@@ -126,7 +126,7 @@ const AdminPanel = () => {
               
               <p className="text-slate-300 italic mb-4 text-lg">"{rev.comment}"</p>
 
-              {/* Răspuns Existent */}
+              {/* Raspuns Existent */}
               {rev.adminReply && (
                 <div className="mt-2 p-4 bg-slate-950/80 border-l-4 border-blue-500 rounded-r-xl">
                   <span className="text-xs font-bold text-blue-400 uppercase tracking-widest block mb-2">Răspunsul tău oficial:</span>
@@ -134,7 +134,7 @@ const AdminPanel = () => {
                 </div>
               )}
 
-              {/* Căsuță de Răspuns */}
+              {/* Casuta de Raspuns */}
               {!rev.adminReply && (
                 <div className="mt-4 flex gap-3 border-t border-slate-700/50 pt-4">
                   <input

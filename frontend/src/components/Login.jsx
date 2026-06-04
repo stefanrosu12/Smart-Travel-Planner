@@ -15,13 +15,11 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Schimbă fundalul la fiecare încărcare a paginii
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * BACKGROUND_IMAGES.length);
     setBackgroundImage(BACKGROUND_IMAGES[randomIndex]);
   }, []);
 
-  // FUNCȚIA DE LOGIN (Mufarea cu Backend-ul)
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -38,25 +36,16 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // ✅ SUCCES: Salvăm token-ul primit
         localStorage.setItem('token', data.token); 
         
-        // --- MODIFICAREA NOUĂ: Salvăm și email-ul ca să-l vadă Navbar-ul ---
-        // Folosim email-ul pe care user-ul l-a scris în input
         localStorage.setItem('userEmail', email);
 
-        // --- SALVĂM ID-ul PENTRU SETĂRI CONT ---
-        // Ca să meargă ștergerea și modificarea în SettingsModal
         if (data.userId) localStorage.setItem('userId', data.userId);
-        else if (data.id) localStorage.setItem('userId', data.id); // în caz că băieții l-au numit doar 'id'
+        else if (data.id) localStorage.setItem('userId', data.id); 
 
-        // ==========================================
-        // 🛡️ PLASA DE SIGURANȚĂ PENTRU ADMIN
-        // ==========================================
         let rolFinal = data.userRole || data.role; 
         
         if (!rolFinal) {
-          // Dacă nu au trimis, aplicăm regula secretă pe frontend:
           if (email.toLowerCase().includes('admin')) {
             rolFinal = 'admin';
           } else {
@@ -64,23 +53,17 @@ const Login = () => {
           }
         }
         
-        // Salvăm rolul final în browser
         localStorage.setItem('userRole', rolFinal);
-        // ==========================================
         
         console.log('Logare reușită! Te-ai logat cu rolul:', rolFinal);
         
-        // Te trimitem la Dashboard-ul tău
         navigate('/dashboard'); 
         
-        // Forțăm o reîncărcare scurtă a paginii ca Navbar-ul să își dea seama imediat de schimbare
         window.location.reload(); 
       } else {
-        // ❌ EROARE: Mesajul vine de la backend
         setError(data.message || 'Email sau parolă incorectă!');
       }
     } catch (err) {
-      // ⚠️ EROARE: Serverul nu este pornit
       setError('Eroare: Nu mă pot conecta la server. Este pornit backend-ul?');
     }
   };
@@ -90,7 +73,7 @@ const Login = () => {
       className="relative min-h-screen bg-slate-900 bg-cover bg-center transition-all duration-1000 flex items-center justify-center px-4" 
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Overlay negru peste imagine pentru contrast */}
+      {/* Overlay negru pentru contrast */}
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Cardul de Login */}
@@ -101,7 +84,7 @@ const Login = () => {
           <p className="mt-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Smart Travel Planner</p>
         </div>
 
-        {/* Afișare eroare dacă există */}
+        {/* Afisare eroare */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 text-[11px] font-black border-l-4 border-red-600 uppercase tracking-widest">
             {error}
