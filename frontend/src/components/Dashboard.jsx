@@ -1,10 +1,9 @@
 import { useState, useRef } from 'react';
 import Harta from './Map.jsx'; 
 import Review from './Review.jsx'; 
-import TurFinalizatSplash from './TurFinalizatSplash.jsx'; // Am importat noua ta componentă!
+import TurFinalizatSplash from './TurFinalizatSplash.jsx'; 
 
 const Dashboard = () => {
-  // Am adăugat starea 'splash'
   const [ecran, setEcran] = useState('formular'); 
   const [oras, setOras] = useState('');
   const [dorinta, setDorinta] = useState('');
@@ -108,7 +107,6 @@ const Dashboard = () => {
     }
   };
 
-  // MODIFICARE AICI: Schimbăm ecranul pe 'splash' prima dată!
   const handleFinalizeazaTurul = () => {
     setEcran('splash');
     setTraseuInDesfasurare(false);
@@ -126,7 +124,6 @@ const Dashboard = () => {
       
       {/* -------------------------------------------------------------
           ECRANUL 1: DASHBOARD-UL CU HARTA 
-          (Acum se ridică și dacă suntem pe 'splash' și dacă suntem pe 'review')
           ------------------------------------------------------------- */}
       <div 
         className={`absolute inset-0 w-full h-full flex flex-col lg:flex-row transition-transform duration-1000 ease-in-out ${ecran === 'review' || ecran === 'splash' ? '-translate-y-full' : 'translate-y-0'}`}
@@ -275,7 +272,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* 🗺️ ZONA DREAPTA: HARTA */}
+        {/*  HARTA */}
         <div className="flex-1 bg-slate-900 relative p-4 h-full">
           <Harta 
             traseu={traseuSalvat} 
@@ -296,7 +293,6 @@ const Dashboard = () => {
 
       {/* -------------------------------------------------------------
           ECRANUL 2: PAGINA DE RECENZIE
-          (Urcă în fundal pe ecran chiar și când splash-ul e activ!)
           ------------------------------------------------------------- */}
       <div 
         className={`absolute inset-0 w-full h-full bg-slate-950 overflow-hidden transition-transform duration-1000 ease-in-out ${ecran === 'review' || ecran === 'splash' ? 'translate-y-0' : 'translate-y-full'}`}
@@ -309,12 +305,11 @@ const Dashboard = () => {
 
       {/* -------------------------------------------------------------
           ECRANUL 3: SPLASH-UL CU BIFA
-          (Apare PESTE toate celelalte imediat cum ai dat click)
           ------------------------------------------------------------- */}
       {ecran === 'splash' && (
         <TurFinalizatSplash 
           actualCity={traseuSalvat?.oras || oras} 
-          onComplete={() => setEcran('review')} // Când trec cele 4.5s, trecem pe review și bifa dispare!
+          onComplete={() => setEcran('review')}
         />
       )}
 

@@ -14,7 +14,6 @@ class UserController {
     async login(req, res) {
         try {
             const { email, password } = req.body;
-            // userService.login face verificarea și returnează datele din baza de date
             const user = await userService.login(email, password);
             
             res.status(200).json({
@@ -39,14 +38,13 @@ class UserController {
     async updateName(req, res) {
         try {
             const { id } = req.params; 
-            const { username } = req.body; // Am adaptat: acum prindem 'username'
+            const { username } = req.body; 
             
             if (!username || username.trim() === "") {
                 return res.status(400).json({ success: false, error: "Numele nu poate fi gol." });
             }
 
             await userService.updateName(id, username);
-            // Am adaptat: trimitem success: true
             res.status(200).json({ success: true, message: "Nume actualizat!" });
         } catch (error) {
             res.status(400).json({ success: false, error: error.message });
@@ -57,7 +55,6 @@ class UserController {
         try {
             const { id } = req.params;
             await userService.deleteAccount(id);
-            // Am adaptat: trimitem success: true
             res.status(200).json({ success: true, message: "Cont șters definitiv." });
         } catch (error) {
             res.status(400).json({ success: false, error: error.message });

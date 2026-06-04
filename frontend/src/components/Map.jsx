@@ -20,28 +20,22 @@ const parseCoord = (coord) => {
   return isNaN(parsed) ? null : parsed;
 };
 
-// Creierul hărții care controlează Camera Video
 function RecenterMap({ position, inDesfasurare, allPins, hasRoute, cityCoords }) {
   const map = useMap();
 
   useEffect(() => {
-    // FIX PENTRU POP-UP-UL FANTOMĂ: 
-    // Dacă nu mai suntem în vizită (am dat Finalizează), forțăm harta să închidă orice balon deschis!
     if (!inDesfasurare) {
       map.closePopup();
     }
 
     if (!hasRoute && cityCoords && !inDesfasurare) {
-      // 1. Zburăm spre oraș în timp ce AI-ul caută
       map.flyTo(cityCoords, 13, { animate: true, duration: 2 });
     }
     else if (hasRoute && !inDesfasurare && allPins && allPins.length > 0) {
-      // 2. AI-ul a terminat. Ajustăm camera să se vadă TOȚI pinii!
       const bounds = L.latLngBounds(allPins.map(p => p.coords));
       map.flyToBounds(bounds, { padding: [70, 70], animate: true, duration: 1.5 });
     }
     else if (inDesfasurare && position) {
-      // 3. Suntem în tur. Zburăm masiv cu zoom (nivel 16) spre locație.
       map.flyTo(position, 16, { animate: true, duration: 1.5 });
     }
   }, [position, inDesfasurare, allPins, hasRoute, cityCoords, map]);
@@ -67,7 +61,6 @@ const Harta = ({ traseu, currentStep = 0, inDesfasurare = false, cityCoords = nu
           coords = [lat, lng];
           lastValidCoords = coords;
         } else {
-          // Backup în caz că AI-ul nu dă GPS
           const baseLat = cityCoords ? cityCoords[0] : centrulClujului[0];
           const baseLng = cityCoords ? cityCoords[1] : centrulClujului[1];
           coords = [
@@ -93,7 +86,6 @@ const Harta = ({ traseu, currentStep = 0, inDesfasurare = false, cityCoords = nu
     focusPosition = pins[currentStep]?.coords || cityCoords || centrulClujului;
   }
 
-  // Deschiderea automată a pop-up-urilor
   useEffect(() => {
     if (inDesfasurare && markerRefs.current[currentStep]) {
       setTimeout(() => {

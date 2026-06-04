@@ -11,12 +11,9 @@ import AdminPanel from './components/AdminPanel';
 const LandingPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-  // SOLUȚIA SUPREMĂ: Generăm o cheie unică garantată LA FIECARE MONTARE a paginii,
-  // fără să cauzăm re-randări suplimentare.
   const [uniqueId] = useState(() => 'flight-' + Math.random().toString(36).substr(2, 9));
 
   useEffect(() => {
-    // Radarul nostru subtil pentru Log Out instant
     const checkToken = () => {
       setIsLoggedIn(!!localStorage.getItem('token'));
     };
@@ -30,7 +27,6 @@ const LandingPage = () => {
   return (
     <section className="relative mx-auto flex min-h-[calc(100vh-70px)] w-full items-center justify-center overflow-hidden px-4 text-center">
       
-      {/* --- CSS --- */}
       <style>{`
         @keyframes routeFade {
           0% { opacity: 0; }
@@ -63,17 +59,14 @@ const LandingPage = () => {
         }
       `}</style>
 
-      {/* --- FUNDALUL ANIMAT --- */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-0 overflow-hidden">
         
-        {/* AICI ESTE MAGIA: adăugăm 'key={uniqueId}' pentru a forța crearea unui DOM nou. */}
         <svg 
           key={uniqueId}
           className="w-full h-full absolute inset-0" 
           viewBox="0 0 1000 600" 
           preserveAspectRatio="xMidYMid slice"
         >
-          {/* Legăm șina de un ID unic */}
           <path
             id={`route-${uniqueId}`}
             d="M -100,550 Q 400,100 900,280" 
@@ -103,7 +96,6 @@ const LandingPage = () => {
               keySplines="0.4 0 0.2 1"
               rotate="auto"
             >
-              {/* Zborul se atașează la șina perfect unică */}
               <mpath href={`#route-${uniqueId}`} />
             </animateMotion>
             
@@ -118,7 +110,6 @@ const LandingPage = () => {
         </svg>
       </div>
 
-      {/* --- CONȚINUTUL --- */}
       <div className="relative z-10 rounded-2xl border border-white/10 bg-slate-900/40 p-8 md:p-12 shadow-2xl backdrop-blur-md max-w-3xl w-full mx-4">
         <p className="mb-4 text-sm uppercase tracking-[0.3em] text-slate-300 font-bold">Smart Travel Planner</p>
         <h1 className="text-4xl font-black text-white md:text-5xl lg:text-6xl tracking-tighter leading-tight">

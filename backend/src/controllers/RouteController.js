@@ -1,5 +1,4 @@
 const routeService = require('../services/RouteService');
-// Importăm și serviciul făcut de colegul tău
 const aiService = require('../services/AiService');
 
 class RouteController {

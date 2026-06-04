@@ -6,8 +6,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Luăm ID-ul utilizatorului din localStorage (dacă l-ai salvat la login)
-  // Daca nu ai salvat ID-ul la login, va trebui sa te asiguri ca backend-ul il trimite!
   const userId = localStorage.getItem('userId'); 
 
   if (!isOpen) return null;
@@ -21,7 +19,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
       const response = await fetch(`http://localhost:3000/api/users/update/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: numeNou }) // Schimba 'username' cu numele coloanei tale din DB
+        body: JSON.stringify({ username: numeNou }) 
       });
       
       const data = await response.json();
@@ -48,13 +46,12 @@ const SettingsModal = ({ isOpen, onClose }) => {
       
       const data = await response.json();
       if (data.success) {
-        // Stergem datele din browser
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         
         alert("Contul a fost șters.");
         onClose();
-        navigate('/'); // Redirecționăm la pagina principală
+        navigate('/'); 
       }
       else { alert("Eroare de la server: " + data.error); }
     } catch (error) {
@@ -66,7 +63,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
       <div className="bg-slate-900 border border-slate-700 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
         
-        {/* Buton X de închidere */}
         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -75,7 +71,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
           Setări Cont
         </h2>
 
-        {/* Formular de UPDATE */}
         <form onSubmit={handleUpdate} className="mb-8">
           <label className="block text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">
             Schimbă Numele
@@ -97,7 +92,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
           </button>
         </form>
 
-        {/* Zona Periculoasă de DELETE */}
         <div className="border-t border-red-500/20 pt-6">
           <h3 className="text-red-400 text-sm font-bold uppercase tracking-widest mb-2">Sigur vrei să faci asta ?</h3>
           <p className="text-slate-400 text-xs mb-4">

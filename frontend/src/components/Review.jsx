@@ -6,9 +6,7 @@ const Review = ({ traseu, onInapoi }) => {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Stare nouă pentru a ține minte ce scrie adminul în căsuța de răspuns a fiecărei recenzii
   const [adminReplyTexts, setAdminReplyTexts] = useState({});
-  // Luăm rolul din localStorage ca să știm cine e șeful
   const userRole = localStorage.getItem('userRole');
 
   const [allReviews, setAllReviews] = useState(() => {
@@ -38,7 +36,7 @@ const Review = ({ traseu, onInapoi }) => {
               rating: rev.rating || 0,
               comment: rev.comment || '',
               date: rev.date || 'Recent',
-              adminReply: rev.adminReply || null // Adăugăm și răspunsul din baza de date
+              adminReply: rev.adminReply || null
             })));
           }
         }
@@ -78,7 +76,7 @@ const Review = ({ traseu, onInapoi }) => {
         rating: rating, 
         comment: comment.trim(), 
         date: 'Acum',
-        adminReply: null // Recenzia nouă e fără răspuns inițial
+        adminReply: null
     };
 
     const reviewData = {
@@ -124,8 +122,6 @@ const Review = ({ traseu, onInapoi }) => {
     const replyText = adminReplyTexts[reviewId];
     if (!replyText?.trim()) return;
 
-    // Aici băieții de pe backend vor face un PUT /api/reviews/update/:id
-    // Dar noi facem magia de frontend ca să se vadă instant!
     const updatedReviews = allReviews.map(r => 
       r.id === reviewId ? { ...r, adminReply: replyText.trim() } : r
     );
@@ -133,7 +129,6 @@ const Review = ({ traseu, onInapoi }) => {
     setAllReviews(updatedReviews);
     localStorage.setItem('travel_reviews', JSON.stringify(updatedReviews));
     
-    // Curățăm căsuța de scris pentru recenzia respectivă
     setAdminReplyTexts(prev => ({ ...prev, [reviewId]: '' }));
   };
 
@@ -211,7 +206,6 @@ const Review = ({ traseu, onInapoi }) => {
               </div>
             </div>
 
-            {/* DREAPTA - AICI E MAGIA CU ADMINUL */}
             <div className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-[30px] flex flex-col min-h-0 shadow-xl">
                <div className="mb-4 flex justify-between items-end">
                   <h3 className="text-xl font-bold">Alte experiențe</h3>
@@ -222,7 +216,7 @@ const Review = ({ traseu, onInapoi }) => {
                   {filteredReviews.map(rev => (
                     <div key={rev.id} className="bg-white/5 border border-white/5 p-4 rounded-2xl flex flex-col">
                       
-                      {/* Antetul recenziei */}
+                      {/* Antet recenzie */}
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-bold text-sm">{rev.user}</span>
                         <div className="flex text-amber-400 text-[10px]">
@@ -230,10 +224,9 @@ const Review = ({ traseu, onInapoi }) => {
                         </div>
                       </div>
                       
-                      {/* Textul recenziei */}
+                      {/* Text recenzie */}
                       <p className="text-gray-400 text-xs italic mb-2">"{rev.comment}"</p>
 
-                      {/* --- CONDITIA 1: DACĂ EXISTĂ RĂSPUNS DE LA ADMIN --- */}
                       {rev.adminReply && (
                          <div className="mt-2 p-3 bg-slate-900/60 border-l-2 border-blue-500 rounded-r-xl">
                            <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-1">Răspuns Oficial</span>
@@ -241,7 +234,6 @@ const Review = ({ traseu, onInapoi }) => {
                          </div>
                       )}
 
-                      {/* --- CONDITIA 2: DACĂ NU EXISTĂ RĂSPUNS ȘI EȘTI ADMIN --- */}
                       {!rev.adminReply && userRole === 'admin' && (
                          <div className="mt-3 flex gap-2 border-t border-white/10 pt-3">
                            <input
