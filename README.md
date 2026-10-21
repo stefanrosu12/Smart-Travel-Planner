@@ -147,7 +147,3 @@ Open the URL printed by Vite (usually `http://localhost:5173`).
 - Authentication is not token-based yet (e.g. JWT), and the admin role is checked on the client side only.
 - The backend port and API URL are hard-coded; moving them to environment variables would ease deployment.
 - Nominatim's usage policy limits request rates, so route generation includes a 1-second delay between geocoding calls.
-
-## License
-
-This project was created for educational purposes. Add a license of your choice (e.g. MIT) if you plan to share or reuse it.
